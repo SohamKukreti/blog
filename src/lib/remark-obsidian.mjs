@@ -47,6 +47,11 @@ function indexVault(vaultDir, postsDir, hideDrafts) {
   return { posts, files };
 }
 
+function isComplete(file) {
+  if (/\.svg$/i.test(file)) return fs.readFileSync(file, 'utf8').includes('</svg>');
+  return fs.statSync(file).size > 0;
+}
+
 function relativeUrl(fromFile, toFile) {
   let rel = path.relative(path.dirname(fromFile), toFile).split(path.sep).join('/');
   if (!rel.startsWith('.')) rel = './' + rel;
@@ -64,7 +69,8 @@ function tokenToNode(match, ctx) {
 
   if (bang && IMAGE_EXT.test(note)) {
     const file = ctx.files.get(note.toLowerCase()) || ctx.files.get(path.basename(note).toLowerCase());
-    if (!file) return { type: 'text', value: whole };
+    // A file still being written (empty, or an SVG without its end) breaks the whole post, so wait for it.
+    if (!file || !isComplete(file)) return { type: 'text', value: whole };
     // Options after "|": a size like 300 or 300x200, "drawing", "invert", or alt text.
     // In dark mode, "drawing" puts the image on a white card and "invert" flips its colors.
     // SVGs count as drawings on their own, unless "invert" is set.
