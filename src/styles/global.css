@@ -1,0 +1,180 @@
+/* Same look as the portfolio: hand-written font, one narrow column, big text.
+   Plus a ballpoint-blue accent and a dark mode. */
+@font-face {
+  font-family: "My-Hand";
+  src: url("../assets/My-Hand-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+/* Recursive, pinned to its "mono + casual" style: straight enough for code, loose enough for the page. */
+@font-face {
+  font-family: "Recursive Mono Casual";
+  src: url("../assets/Recursive-MonoCasual.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --paper: #fff;
+  --ink: #111;
+  --soft: #5d5a55;
+  --line: #d9d5cc;
+  --pen: #2447c7;
+  --pen-wash: #eef1fd;
+  --hand: "My-Hand", "Georgia", serif;
+  --mono: "Recursive Mono Casual", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+/* Light is the default. Dark only when the reader picks it with the toggle. */
+:root[data-theme="dark"] {
+  --paper: #17181b;
+  --ink: #ecebe7;
+  --soft: #a8a59e;
+  --line: #3a3b40;
+  --pen: #93a8ff;
+  --pen-wash: #22273a;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--hand);
+  font-size: 24px;
+  line-height: 1.5;
+  max-width: 40em;
+  margin: 0 auto;
+  padding: 48px 20px;
+  color: var(--ink);
+  background: var(--paper);
+}
+h1 { font-size: 3em; line-height: 1.15; margin: 0 0 16px 0; font-weight: normal; text-wrap: balance; }
+h2 { font-size: 1.5em; margin: 40px 0 10px 0; font-weight: normal; }
+h3 { font-size: 1.15em; margin: 24px 0 4px 0; font-weight: normal; }
+h4, h5, h6 { font-size: 1em; margin: 20px 0 4px 0; font-weight: normal; }
+p { margin: 8px 0; }
+a { color: inherit; text-underline-offset: 3px; }
+a:hover { color: var(--pen); }
+a:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; }
+strong, b { font-weight: bold; }
+mark { background: var(--pen-wash); color: inherit; padding: 0 4px; border-radius: 3px; }
+hr { border: 0; border-top: 1.5px dashed var(--line); margin: 40px 0; }
+img { max-width: 100%; height: auto; }
+ul, ol { padding-left: 1.2em; }
+li { margin: 4px 0; }
+
+.portrait { float: right; width: 200px; max-width: 40%; height: auto; margin: 0 0 12px 20px; }
+/* Drawings are dark ink on a clear background. In dark mode, put them on a white card
+   so they stay visible. SVGs get this on their own; add `|drawing` in Obsidian for others. */
+[data-theme="dark"] :is(.portrait, img.drawing) {
+  background: #fff;
+  border-radius: 4px;
+  /* The white edge is a shadow, so it grows outward: the drawing keeps its size and place. */
+  box-shadow: 0 0 0 10px #fff;
+}
+/* `|invert` in Obsidian: flip the image's colors in dark mode instead (black ink turns white). */
+[data-theme="dark"] img.invert-dark { filter: invert(1); }
+
+/* ---------- theme toggle ---------- */
+body { position: relative; }
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  border: 0;
+  background: none;
+  padding: 4px 0;
+  font: inherit;
+  font-size: 0.75em;
+  color: var(--soft);
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--pen); text-decoration: underline; text-underline-offset: 3px; }
+.theme-toggle:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; }
+
+/* ---------- post list ---------- */
+.posts { list-style: none; padding: 0; margin: 24px 0; display: grid; gap: 20px; }
+.posts li { margin: 0; }
+.posts a { font-size: 1.15em; }
+.posts .meta { display: block; font-size: 0.75em; color: var(--soft); }
+.posts p { margin: 2px 0 0; font-size: 0.85em; color: var(--soft); }
+.draft-tag { margin-left: 8px; font-size: 0.6em; color: var(--pen); border: 1.5px solid var(--pen); border-radius: 4px; padding: 0 6px; vertical-align: middle; }
+
+/* ---------- post page ---------- */
+.back { font-size: 0.85em; }
+.post-meta { color: var(--soft); font-size: 0.85em; margin-bottom: 32px; }
+.post-meta .tags { margin-left: 8px; }
+footer { margin-top: 64px; font-size: 0.8em; color: var(--soft); }
+
+/* ---------- code ---------- */
+/* Inline code stays in the handwriting, in blue. Code blocks use a real monospace. */
+code {
+  font-family: inherit;
+  color: var(--pen);
+  overflow-wrap: anywhere;
+}
+/* A code block is a box drawn by hand: uneven corners, no fill,
+   a handwritten language tag on the top left and a copy button on the top right. */
+.code { position: relative; margin: 32px 0 24px; }
+pre {
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.6;
+  background: none !important;
+  border: 2px solid var(--ink);
+  border-radius: 14px 5px 12px 4px / 5px 14px 4px 12px;
+  padding: 22px 20px 16px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.code pre { margin: 0; }
+pre code { font-family: var(--mono); color: inherit; overflow-wrap: normal; }
+.astro-code span { color: var(--shiki-light); }
+[data-theme="dark"] .astro-code span { color: var(--shiki-dark); }
+.code-lang, .code-copy {
+  position: absolute;
+  top: -0.75em;
+  padding: 0 8px;
+  background: var(--paper);
+  font-family: var(--hand);
+  font-size: 0.75em;
+  line-height: 1.4;
+}
+.code-lang { left: 16px; color: var(--soft); }
+.code-copy { right: 16px; display: none; border: 0; color: var(--pen); cursor: pointer; }
+.code-copy:hover { text-decoration: underline; text-underline-offset: 3px; }
+.code-copy:focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; }
+.js .code-copy { display: block; }
+
+/* ---------- quotes and callouts ---------- */
+blockquote {
+  margin: 16px 0;
+  padding: 2px 0 2px 16px;
+  border-left: 3px solid var(--line);
+  color: var(--soft);
+}
+.callout {
+  margin: 20px 0;
+  padding: 10px 16px;
+  border: 1.5px solid var(--pen);
+  border-radius: 8px;
+  background: var(--pen-wash);
+}
+.callout-title { color: var(--pen); margin-top: 0; }
+.callout[data-callout="warning"], .callout[data-callout="caution"], .callout[data-callout="danger"] {
+  --pen: #b4461f; --pen-wash: #fcefe9;
+}
+[data-theme="dark"] .callout:is([data-callout="warning"], [data-callout="caution"], [data-callout="danger"]) {
+  --pen: #f0a07f; --pen-wash: #35231c;
+}
+
+/* ---------- tables ---------- */
+.table-wrap, table { display: block; overflow-x: auto; }
+table { border-collapse: collapse; font-size: 0.85em; margin: 16px 0; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1.5px solid var(--line); }
+th { font-weight: normal; color: var(--soft); }
+
+@media (max-width: 600px) {
+  body { font-size: 21px; }
+  h1 { font-size: 2.2em; }
+  .portrait { float: none; display: block; width: 150px; max-width: none; margin: 0 auto 20px auto; }
+}

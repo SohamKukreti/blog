@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import { url } from '../lib/posts';
+import fontUrl from '../assets/My-Hand-Regular.woff2?url';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Notes and writing by Soham Kukreti.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="alternate" type="application/rss+xml" title="Soham's blog" href={url('rss.xml')} />
+    <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      // Runs before the page paints, so a reader who picked dark never sees a white flash.
+      try {
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">dark mode</button>
+    <slot />
+    <footer>
+      <a href="https://sohamkukreti.github.io/">Soham Kukreti</a> · <a href={url()}>all posts</a> · <a href={url('rss.xml')}>rss</a>
+    </footer>
+    <script>
+      const root = document.documentElement;
+      root.classList.add('js');
+
+      const toggle = document.getElementById('theme-toggle')!;
+      const label = () => (toggle.textContent = root.dataset.theme === 'dark' ? 'light mode' : 'dark mode');
+      label();
+      toggle.addEventListener('click', () => {
+        const dark = root.dataset.theme !== 'dark';
+        if (dark) root.dataset.theme = 'dark';
+        else delete root.dataset.theme;
+        try {
+          localStorage.setItem('theme', dark ? 'dark' : 'light');
+        } catch {}
+        label();
+      });
+
+      for (const button of document.querySelectorAll<HTMLButtonElement>('.code-copy')) {
+        button.addEventListener('click', async () => {
+          const code = button.parentElement?.querySelector('pre')?.innerText ?? '';
+          try {
+            await navigator.clipboard.writeText(code);
+            button.textContent = 'copied!';
+          } catch {
+            button.textContent = 'could not copy';
+          }
+          setTimeout(() => (button.textContent = 'copy'), 1500);
+        });
+      }
+    </script>
+  </body>
+</html>
