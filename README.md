@@ -1,8 +1,8 @@
-# Soham's blog
+# My blog
 
-Write in Obsidian, get a site that looks like the portfolio.
+I like the way my portfolio looked so I wanted to have a blog with the same vibe: goofy, experimental and artsy
 
-## Write a post
+## How to use
 
 1. Open the `vault/` folder in Obsidian ("Open folder as vault").
 2. Make a new note in `vault/posts/`, then run **Templates: Insert template → post**.
@@ -36,12 +36,3 @@ npm run build    # real site in dist/ — drafts left out
 | `> [!note] Title`           | callout box (`warning` is orange)     |
 
 Only notes in `vault/posts/` become pages. Anything else in the vault stays private.
-
-## Publish (later)
-
-1. Make a GitHub repo called `blog` and push this folder to it.
-2. Repo **Settings → Pages → Source: GitHub Actions**.
-3. Every push to `main` builds and deploys to https://sohamkukreti.github.io/blog/
-   (see `.github/workflows/deploy.yml`).
-
-If the repo gets a different name, change `base` in `astro.config.mjs`.
