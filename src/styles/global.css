@@ -74,12 +74,39 @@ li { margin: 4px 0; }
 /* `|invert` in Obsidian: flip the image's colors in dark mode instead (black ink turns white). */
 [data-theme="dark"] img.invert-dark { filter: invert(1); }
 
-/* ---------- theme toggle ---------- */
+/* Plain font: Lora, a soft serif with roots in calligraphy, so it sits well next to the handwriting. For readers who find the handwriting hard to read.
+   It looks bigger than the handwriting at the same size, so the text gets a bit smaller. */
+@font-face {
+  font-family: "Lora";
+  src: url("../assets/Lora.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lora";
+  src: url("../assets/Lora-Italic.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+:root[data-font="plain"] {
+  --hand: "Lora", "Georgia", serif;
+}
+[data-font="plain"] body { font-size: 19px; line-height: 1.65; }
+[data-font="plain"] :is(h1, h2, h3, h4, h5, h6) { font-weight: 600; }
+[data-font="plain"] h1 { font-size: 2.3em; }
+
+/* ---------- theme and font toggles ---------- */
 body { position: relative; }
-.theme-toggle {
+.toggles {
   position: absolute;
   top: 16px;
   right: 20px;
+  display: flex;
+  gap: 16px;
+}
+.theme-toggle {
   border: 0;
   background: none;
   padding: 4px 0;
@@ -177,7 +204,9 @@ th { font-weight: normal; color: var(--soft); }
   body { font-size: 19px; line-height: 1.45; padding: 28px 16px 40px; }
   h1 { font-size: 2em; margin-bottom: 12px; }
   h2 { margin-top: 32px; }
-  .theme-toggle { top: 8px; right: 16px; }
+  .toggles { top: 8px; right: 16px; }
+  [data-font="plain"] body { font-size: 17px; }
+  [data-font="plain"] h1 { font-size: 1.8em; }
   .post-meta { margin-bottom: 24px; }
   .portrait { float: none; display: block; width: 150px; max-width: none; margin: 0 auto 20px auto; }
 }

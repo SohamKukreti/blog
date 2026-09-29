@@ -21,14 +21,18 @@ const { title, description = 'Notes and writing by Soham Kukreti.' } = Astro.pro
     <link rel="alternate" type="application/rss+xml" title="Soham's blog" href={url('rss.xml')} />
     <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
     <script is:inline>
-      // Runs before the page paints, so a reader who picked dark never sees a white flash.
+      // Runs before the page paints, so a reader who picked dark or the plain font never sees a flash.
       try {
         if (localStorage.getItem('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+        if (localStorage.getItem('font') === 'plain') document.documentElement.dataset.font = 'plain';
       } catch {}
     </script>
   </head>
   <body>
-    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">dark mode</button>
+    <div class="toggles">
+      <button type="button" class="theme-toggle" id="font-toggle" aria-label="Switch between handwritten and plain font">plain font</button>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode">dark mode</button>
+    </div>
     <slot />
     <footer>
       <a href="https://sohamkukreti.github.io/">Soham Kukreti</a> · <a href={url()}>all posts</a> · <a href={url('rss.xml')}>rss</a>
@@ -48,6 +52,19 @@ const { title, description = 'Notes and writing by Soham Kukreti.' } = Astro.pro
           localStorage.setItem('theme', dark ? 'dark' : 'light');
         } catch {}
         label();
+      });
+
+      const fontToggle = document.getElementById('font-toggle')!;
+      const fontLabel = () => (fontToggle.textContent = root.dataset.font === 'plain' ? 'hand font' : 'plain font');
+      fontLabel();
+      fontToggle.addEventListener('click', () => {
+        const plain = root.dataset.font !== 'plain';
+        if (plain) root.dataset.font = 'plain';
+        else delete root.dataset.font;
+        try {
+          localStorage.setItem('font', plain ? 'plain' : 'hand');
+        } catch {}
+        fontLabel();
       });
 
       for (const button of document.querySelectorAll<HTMLButtonElement>('.code-copy')) {
