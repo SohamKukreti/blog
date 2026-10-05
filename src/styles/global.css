@@ -65,14 +65,15 @@ li { margin: 4px 0; }
 .portrait { float: right; width: 200px; max-width: 40%; height: auto; margin: 0 0 12px 20px; }
 /* Drawings are dark ink on a clear background. In dark mode, put them on a white card
    so they stay visible. SVGs get this on their own; add `|drawing` in Obsidian for others. */
-[data-theme="dark"] :is(.portrait, img.drawing) {
+[data-theme="dark"] img.drawing {
   background: #fff;
   border-radius: 4px;
   /* The white edge is a shadow, so it grows outward: the drawing keeps its size and place. */
   box-shadow: 0 0 0 10px #fff;
 }
 /* `|invert` in Obsidian: flip the image's colors in dark mode instead (black ink turns white). */
-[data-theme="dark"] img.invert-dark { filter: invert(1); }
+/* The portrait is only ink, so it gets the same flip. */
+[data-theme="dark"] :is(.portrait, img.invert-dark) { filter: invert(1); }
 
 /* Plain font: Lora, a soft serif with roots in calligraphy, so it sits well next to the handwriting. For readers who find the handwriting hard to read.
    It looks bigger than the handwriting at the same size, so the text gets a bit smaller. */
